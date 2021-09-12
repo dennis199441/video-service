@@ -33,5 +33,5 @@ jobs:
       with:
         context: .
         push: true
-        tags: latest
+        tags: dennis199441/toolbox-video-service:latest
         labels: ${{ steps.meta.outputs.labels }}
