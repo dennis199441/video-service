@@ -2,7 +2,7 @@ import sys
 from flask import Flask, jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required
 from app.decorators.role_required import role_required
-from app.services.process_service import get_all_processes, get_process_by_id, create_process, cancel_process, upload_file
+from app.services.process_service import get_all_processes, get_process_by_id, create_process, cancel_process, upload_file, download_file
 
 process = Blueprint("process", __name__)
 
@@ -56,5 +56,17 @@ def get():
         result = get_all_processes()
     except:
         result["message"] = "Get all processes error"
+        status = 500
+    return jsonify(result), status
+
+
+@process.route('/download/<id>', methods=['GET'])
+@jwt_required
+def download(id):
+    result, status = {}, 200
+    try:
+        return download_file(id)
+    except:
+        result["message"] = "Download file error"
         status = 500
     return jsonify(result), status

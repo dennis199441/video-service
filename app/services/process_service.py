@@ -1,4 +1,5 @@
 from datetime import datetime
+from flask import send_from_directory
 from app.entities.entity import Session
 from app.entities.process import Process, ProcessLogSchema
 from app.entities.process_types import ProcessType, ProcessTypeSchema
@@ -9,6 +10,7 @@ import os
 
 ALLOWED_EXTENSIONS = {'mov', 'mp4'}
 UPLOAD_FOLDER = "/usr/src/app/input"
+OUTPUT_FOLDER = "/usr/src/app/output"
 
 
 def get_all_process_types():
@@ -130,3 +132,9 @@ def upload_file(user_id, file):
 def validate_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def download_file(id):
+    process = get_process_by_id(id)
+    filename = process["hashed_name"] + "-" + process["filename"]
+    return send_from_directory(directory=OUTPUT_FOLDER, filename=filename)
